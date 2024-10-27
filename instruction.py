@@ -49,8 +49,7 @@ def show_instruction_buttons(top_files):
     # Create a button for each top file
     for idx, filename in enumerate(top_files):
         button = tk.Button(result_frame, text=filename, 
-                           command=lambda f=filename: os.startfile(os.path.join('Instructions', f)),
-                           relief=tk.FLAT)
+                           command=lambda f=filename: os.startfile(os.path.join('Instructions', f))
         button.pack(pady=5)  # Add vertical padding between buttons
 
 
