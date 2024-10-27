@@ -53,6 +53,7 @@ def show_instruction_buttons(top_files):
                            relief=tk.FLAT)
         button.pack(pady=5)  # Add vertical padding between buttons
 
+
 # Function to analyze the problem and display results
 def analyze_problem(problem_text):
     try:
@@ -70,7 +71,6 @@ def analyze_problem(problem_text):
         cos_sim = util.pytorch_cos_sim(query_embedding, text_embeddings)
         top_similarities, top_indices = torch.topk(cos_sim[0], k=min(5, len(texts)))
         top_problems = [(texts[idx.item()], round(sim.item() * 100, 2)) for idx, sim in zip(top_indices, top_similarities)]
-
     except Exception as e:
         clear_results()
         tk.Label(result_frame, text=f"Error during analysis: {e}").pack()
@@ -101,12 +101,7 @@ def analyze_problem(problem_text):
     tk.Label(result_frame, text="\nSuggested instruction:", font=("Arial", 14)).pack()
     tk.Label(result_frame, text=f"{best_instruction}", font=("Arial", 12)).pack()
 
-    # Удаляем существующую кнопку "View Detailed Instructions"
-    for widget in result_frame.winfo_children():
-        if isinstance(widget, tk.Button) and widget.cget("text").endswith("View Detailed Instructions"):
-            widget.destroy()
-
-    # Создаем новую кнопку "View Detailed Instructions"
+    # Button to find and show top files for detailed instructions
     detailed_button = tk.Button(result_frame, text="View Detailed Instructions", 
                                 command=lambda: show_instruction_buttons(find_top_files(best_instruction, top_n=3)))
     detailed_button.pack()
@@ -116,7 +111,6 @@ def clear_results():
     for widget in result_frame.winfo_children():
         widget.destroy()
 
-
 # Clear any existing instruction buttons
 def clear_instruction_buttons():
     for widget in result_frame.winfo_children():
@@ -124,38 +118,21 @@ def clear_instruction_buttons():
             widget.destroy()
 
 # Tkinter GUI setup
-# Tkinter GUI setup
 window = tk.Tk()
 window.title("Problem Analyzer")
-window.configure(bg='dimgray')  # Dark gray background for the window
 
-# Set window size
-window_width = 800  # Fixed width
-window_height = 600  # Fixed height
-window.geometry(f"{window_width}x{window_height}")
+label_problem = tk.Label(window, text="Enter your problem description:")
+label_problem.pack()
+entry_problem = tk.Entry(window, width=50)
+entry_problem.pack()
 
-# Create a frame for the left panel
-left_frame = tk.Frame(window, bg='lightgray', width=400)  # Fixed width for left panel
-left_frame.pack(side=tk.LEFT, fill=tk.Y)
+button_analyze = tk.Button(window, text="Analyze", command=lambda: analyze_problem(entry_problem.get()))
+button_analyze.pack()
 
-# Create a frame for results
-result_frame = tk.Frame(left_frame, bg='lightgray')
-result_frame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
-
-# Create the input areay
-input_frame = tk.Frame(window, bg='dimgray', width=400)  # Fixed width for input area
-input_frame.pack(pady=(10, 60))  # Right side for input area
-
-label_problem = tk.Label(input_frame, text="Enter your problem description:", bg='dimgray', fg='white')
-label_problem.pack(pady=(10, 60))
-
-entry_problem = tk.Entry(input_frame, width=50)
-entry_problem.pack(pady=(10, 60))
-
-button_analyze = tk.Button(input_frame, text="Analyze", command=lambda: analyze_problem(entry_problem.get()))
-button_analyze.pack(pady=(10, 40))
-
-label_result = tk.Label(input_frame, bg='dimgray', fg='white')
+label_result = tk.Label(window, text="Result:")
 label_result.pack()
+
+result_frame = tk.Frame(window)
+result_frame.pack()
 
 window.mainloop()
