@@ -50,7 +50,7 @@ def show_instruction_buttons(top_files):
     for idx, filename in enumerate(top_files):
         button = tk.Button(result_frame, text=filename, 
                            command=lambda f=filename: os.startfile(os.path.join('Instructions', f)),
-                           relief=tk.FLAT, bg="#E0F0D0")  # Green background color
+                           relief=tk.FLAT)
         button.pack(pady=5)  # Add vertical padding between buttons
 
 # Function to analyze the problem and display results
